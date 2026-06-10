@@ -1,0 +1,11 @@
+runtime: go122
+service: auth 
+instance_class: F1
+
+
+
+env_variables:
+  INSTANCE_CONNECTION_NAME: "project-113e2a4a-0ad0-4980-ba0:us-central1:free-trial-first-project"
+  DB_USER: "max"
+  DB_PASS: "3Y;m+BX`?VTUp&_7"
+  DB_NAME: "PRUEBAS"
