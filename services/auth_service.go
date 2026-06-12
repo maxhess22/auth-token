@@ -27,6 +27,7 @@ func (s *AuthService) RegisterUser(input models.AuthInput) error {
 	}
 
 	user := &models.User{
+		RoleId:   "2",
 		Name:     input.Name,
 		Email:    input.Email,
 		Password: string(hashedPassword),
@@ -51,7 +52,8 @@ func (s *AuthService) LoginUser(input models.AuthInput) (string, error) {
 
 	// 3. Generar JWT (Payload o "Claims")
 	claims := jwt.MapClaims{
-		"sub":   user.ID, // Subject (ID del usuario)
+		"id":    user.ID,
+		"role":  user.RoleId, // Rol del usuario
 		"email": user.Email,
 		"exp":   time.Now().Add(time.Hour * 24).Unix(), // Expira en 24 horas
 	}

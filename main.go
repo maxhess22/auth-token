@@ -10,7 +10,9 @@ import (
 	"max/auth/utils"
 	"net/http"
 	"os"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -32,7 +34,14 @@ func main() {
 
 	// 4. Configurar el Router (Gin)
 	r := gin.Default()
-
+	r.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true, // Sigue permitiendo que CUALQUIERA entre
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"}, // <-- ¡Crucial para que pase tu JWT!
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 	// Rutas Públicas
 	public := r.Group("/api/auth")
 	{
@@ -46,7 +55,8 @@ func main() {
 	{
 		// Ruta de prueba para verificar que el JWT funciona
 		protected.GET("/profile", func(c *gin.Context) {
-			userID, _ := c.Get("userID") // Obtenido desde el middleware
+			userID, _ := c.Get("userID")
+			// Obtenido desde el middleware
 			utils.RespondJSON(c, http.StatusOK, "Perfil protegido cargado", gin.H{"userID": userID})
 		})
 	}
